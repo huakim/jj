@@ -1,0 +1,78 @@
+word:
+  // an identifier
+assign_operator:
+  // an operator
+operator:
+  // an operator
+keyword:
+  // an key identifier
+string: 
+  // an string value
+character:
+  // an one letter
+number:
+  // an number
+dict:
+  word, expr
+note: 
+  '@', [word*], [dict*]
+type:
+  '$type', [word*], ?type, [type*], number, [note*], number
+  //         name   extend  generic  level  notes    flag
+set_node:
+  word, expr, number
+set: 
+   '$set', type, [set_node*]
+set_one: 
+   '$set', type, word, expr
+cls_body:
+  // body of the class
+fnc:
+  // function 
+
+expr: 
+  [ : '[', expr, expr
+*  arr:          '$array', [expr*]
+  key:          '%k', keyword
+  str:          '%s', string
+  chr:          '%c', character
+  idn:          '%v', word
+  num:          '%d', number
+  isf:          '$instanceof', expr, type
+  dot:          '.', expr, expr
+  new:          '$new', type, [expr*]
+  malloc:       '$malloc', type, [expr*, number]
+  new_array:    '$new_arr', type, [number], [expr*]
+  anonumous:    '$anonumous', type, [expr*], cls_body
+  call:         '$call', word, [expr*], [type*]
+  super_call:   '$scall', [expr*], 
+  this_call:    '$tcall', [expr*]
+*  ::new:        '::new', expr
+*  ::,           '::', expr, word
+*  lambda:       '$lambda', [0, expr], fnc
+*  ?:            '?', expr, expr, expr
+  b_ops:        '$b_ops', [operator*], expr
+  f_ops:        '$f_ops', [operator*], expr
+  assign:       '$assign', [assign_operator*], expr
+  math:         '$math', [operator], expr, expr
+*  assert:       '$assert', expr, word
+  break:        '$break', word%
+  continue:     '$continue', word%
+  do_while:     '$do', expr, fnc
+  cast:         '$cast', type, expr
+  if:           '$if', expr, fnc, fnc%
+  for_1:        '$for', 1, expr%, expr%, expr%, fnc
+*  for_2:        '$for', 2, type, word, expr, fnc
+*  for_3:        '$for', 3, word, expr, fnc
+  goto:         '$goto', word
+  return:       '$return', expr
+*  switch:       '$switch', expr, fnc
+*  case:         '$case', expr
+*  default:      '$default'
+  try:          '$try', [expr, fnc], [[[type, word], fnc]*], fnc
+  throw:        '$throw', expr
+  while:        '$while', expr, fnc
+  var:          '$var', word, expr, [note*], number
+  body:         '$body', fnc
+  label:        '$label', word
+  
